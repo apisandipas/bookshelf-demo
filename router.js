@@ -3,6 +3,9 @@ const Entry = require('./models/entry')
 
 var router = express.Router()
 
+/**
+ *   List all Entries
+ */
 router.get('/entries', (req, res) => {
   new Entry().fetchAll()
     .then((entries) => {
@@ -18,6 +21,9 @@ router.get('/entries', (req, res) => {
     })
 })
 
+/**
+ *  Create New Entries
+ */
 router.post('/entries', (req, res) => {
   var reading = req.body.reading
   Entry.forge({ reading: reading })
@@ -35,6 +41,9 @@ router.post('/entries', (req, res) => {
     })
 })
 
+/**
+ * Update an Entry
+ */
 router.put('/entries/:entryId', (req, res) => {
   Entry.forge({ id: req.params.entryId })
     .fetch({require: true})
@@ -62,6 +71,9 @@ router.put('/entries/:entryId', (req, res) => {
     })
 })
 
+/**
+ * Delete an Entry
+ */
 router.delete('/entries/:entryId', (req, res) => {
   var entryId = req.params.entryId
   Entry
