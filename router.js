@@ -1,7 +1,7 @@
 const express = require('express')
 const Entry = require('./models/entry')
 
-var router = express.Router()
+const router = express.Router()
 
 /**
  *   List all Entries
