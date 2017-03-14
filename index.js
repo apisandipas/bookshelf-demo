@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const Entry = require('./models/entry')
 
 const app = express()
+const PORT = process.env.NODE_ENV || 3000
 
 app.use(morgan('combined'))
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -50,4 +51,4 @@ app.use((err, req, res, next) => {
   next(err)
 })
 
-app.listen(3000, () => { console.log('Listening on port 3000') })
+app.listen(PORT, () => { console.log('Listening on port %d', PORT) })
