@@ -10,6 +10,10 @@ app.use(morgan('combined'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
+app.get('/', (req, res) => {
+  res.send('Hello World')
+})
+
 app.use('/api/v1/', router)
 
 // Error handling

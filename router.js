@@ -3,10 +3,6 @@ const Entry = require('./models/entry')
 
 var router = express.Router()
 
-router.get('/', (req, res) => {
-  res.send('Hello World')
-})
-
 router.get('/entries', (req, res) => {
   new Entry().fetchAll()
     .then((entries) => {
@@ -14,9 +10,11 @@ router.get('/entries', (req, res) => {
         error: false,
         data: { entries: entries }
       })
-    }).catch((error) => {
-      console.log(error)
-      res.send('An error occured')
+    }).catch((err) => {
+      res.status(500).json({
+        error: true,
+        data: { message: err.message }
+      })
     })
 })
 
@@ -29,9 +27,11 @@ router.post('/entries', (req, res) => {
         error: false,
         data: { entry: entry }
       })
-    }).catch((error) => {
-      console.log(error)
-      res.send('An error occured')
+    }).catch((err) => {
+      res.status(500).json({
+        error: true,
+        data: { message: err.message }
+      })
     })
 })
 
