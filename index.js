@@ -17,9 +17,12 @@ app.get('/', (req, res) => {
 
 app.get('/entries', (req, res) => {
   new Entry().fetchAll()
-    .then(function (entries) {
-      res.send(entries.toJSON())
-    }).catch(function (error) {
+    .then((entries) => {
+      res.json({
+        error: false,
+        data: { entries: entries }
+      })
+    }).catch((error) => {
       console.log(error)
       res.send('An error occured')
     })
@@ -27,23 +30,61 @@ app.get('/entries', (req, res) => {
 
 app.post('/entries', (req, res) => {
   var reading = req.body.reading
-  new Entry({ reading: reading })
-  .save().then((model) => {
-    res.send({entry: model})
-  }).catch(function (error) {
-    console.log(error)
-    res.send('An error occured')
-  })
+  Entry.forge({ reading: reading })
+    .save()
+    .then((entry) => {
+      res.json({
+        error: false,
+        data: { entry: entry }
+      })
+    }).catch((error) => {
+      console.log(error)
+      res.send('An error occured')
+    })
+})
+
+app.put('/entries/:entryId', (req, res) => {
+  Entry.forge({ id: req.params.entryId })
+    .fetch({require: true})
+    .then((entry) => {
+      entry.save({
+        reading: req.body.reading || entry.get('reading')
+      })
+      .then((saved) => {
+        res.json({
+          error: false,
+          data: { message: 'Entry details updated', entry: saved }
+        })
+      })
+      .catch((err) => {
+        res.status(500).json({
+          error: true,
+          data: { message: err.message }
+        })
+      })
+    }).catch((err) => {
+      res.status(500).json({
+        error: true,
+        data: { message: err.message }
+      })
+    })
 })
 
 app.delete('/entries/:entryId', (req, res) => {
   var entryId = req.params.entryId
-  new Entry({ id: entryId }).destroy().then(() => {
-    res.send('Entry ' + entryId + ' deleted')
-  }).catch(function (error) {
-    console.log(error)
-    res.send('An error occured')
-  })
+  Entry
+    .where({ id: entryId })
+    .destroy().then(() => {
+      res.json({
+        error: false,
+        data: { message: 'Entry details updated' }
+      })
+    }).catch((err) => {
+      res.status(500).json({
+        error: true,
+        data: { message: err.message }
+      })
+    })
 })
 
 app.use((err, req, res, next) => {

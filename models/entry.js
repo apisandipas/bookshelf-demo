@@ -4,4 +4,4 @@ const Entry = db.Model.extend({
   tableName: 'entries'
 })
 
-module.exports = Entry
+module.exports = db.model('Entry', Entry)
